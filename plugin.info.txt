@@ -3,5 +3,5 @@ author Vincent Tscherter
 email  vincent.tscherter@gmail.com
 date   2014-10-31
 name   EBNF Parser and Syntax Diagram Renderer
-desc   Parses grammars in backus–naur form (EBNF) and renders as syntax diagram
+desc   Parses grammars in backus-naur form (EBNF) and renders as syntax diagram
 url    http://www.dokuwiki.org/plugin:ebnf
