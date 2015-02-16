@@ -23,7 +23,7 @@
 error_reporting(E_ALL|E_STRICT);
 
 //
-define('META', 'xis/ebnf v0.2 http://wiki.karmin.ch/ebnf/ gpl3');
+define('META', 'xis/ebnf v0.2 https://www.dokuwiki.org/plugin:ebnf gpl3');
 
 // parser
 define('EBNF_OPERATOR_TOKEN', 1);
