@@ -15,17 +15,6 @@ require_once(DOKU_PLUGIN.'syntax.php');
 
 class syntax_plugin_ebnf extends DokuWiki_Syntax_Plugin {
 
-    function getInfo(){
-        return array(
-            'author' => 'Vincent Tscherter',
-            'email'  => 'tscherter@karmin.ch',
-            'date'   => '2009-01-18',
-            'name'   => 'EBNF Plugin',
-            'desc'   => 'EBNF Syntax Diagram',
-            'url'    => 'http://wiki.karmin.ch/ebnf/',
-        );
-    }
-
     function getType(){
         return 'substition';
     }
