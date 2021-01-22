@@ -129,7 +129,7 @@ function arrow($image, $x, $y, $lefttoright) {
 function render_node($node, $lefttoright) {
   global $white, $black, $blue, $red, $green, $silver;
   if ($node->nodeName=='identifier' || $node->nodeName=='terminal') {
-    $text = $node->getAttribute('value');
+    $text = html_entity_decode($node->getAttribute('value'));
     $w = imagefontwidth(FONT)*(strlen($text)) + 4*UNIT;
     $h = 2*UNIT;
     $im = create_image($w, $h);
