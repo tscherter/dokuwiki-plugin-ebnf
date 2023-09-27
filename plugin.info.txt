@@ -1,6 +1,6 @@
 base   ebnf
 author Vincent Tscherter
-email  vincent.tscherter@gmail.com
+email  vincent@tscherter.net
 date   2023-09-27
 name   EBNF Parser and Syntax Diagram Renderer
 desc   Parses grammars in backus-naur form (EBNF) and renders as syntax diagram

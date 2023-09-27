@@ -6,7 +6,7 @@
  *
  * @license    GPL3
  * @author     Vincent Tscherter <vinent.tscherter@karmin.ch>
- * @version    0.1
+ * @version    0.2
  */
 
 use dokuwiki\Extension\SyntaxPlugin;

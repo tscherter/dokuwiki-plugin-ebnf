@@ -19,6 +19,7 @@
     2009-01-02 version 0.2
       - title und comment literal added
       - ";" als terminator-symbol added
+    2023-09-28 version 0.3 prefixed all constants
 */
 
 define('META', 'https://www.dokuwiki.org/plugin:ebnf');
@@ -376,5 +377,3 @@ function ebnf_parse_factor(&$dom, &$tokens, &$i) {
   }
   throw new Exception("Factor expected: {$token['pos']}");
 }
-
-?>
