@@ -19,11 +19,10 @@
     2009-01-02 version 0.2
       - title und comment literal added
       - ";" als terminator-symbol added
+    2023-09-28 version 0.3 prefixed all constants
 */
-error_reporting(E_ALL|E_STRICT);
 
-//
-define('META', 'xis/ebnf v0.2 https://www.dokuwiki.org/plugin:ebnf gpl3');
+define('META', 'https://www.dokuwiki.org/plugin:ebnf');
 
 // parser
 define('EBNF_OPERATOR_TOKEN', 1);
@@ -32,9 +31,9 @@ define('EBNF_WHITESPACE_TOKEN', 3);
 define('EBNF_IDENTIFIER_TOKEN', 4);
 
 // rendering
-define('FONT', 3);
-define('UNIT', 10);
-define('AW', 3);
+define('EBNF_FONT', 2);
+define('EBNF_U', 10);
+define('EBNF_AW', 3);
 
 // lexemes
 $ebnf_lexemes[] = array( 'type' => EBNF_OPERATOR_TOKEN, 'expr' => '[={}()|.;[\]]' );
@@ -119,10 +118,10 @@ function arrow($image, $x, $y, $lefttoright) {
   global $white, $black;
   if (!$lefttoright)
     imagefilledpolygon($image,
-      array($x, $y-UNIT/3, $x-UNIT, $y, $x, $y+UNIT/3), 3, $black);
+      array($x, $y-EBNF_U/3, $x-EBNF_U, $y, $x, $y+EBNF_U/3), 3, $black);
   else
     imagefilledpolygon($image,
-      array($x-UNIT, $y-UNIT/3, $x, $y, $x-UNIT, $y+UNIT/3), 3, $black);
+      array($x-EBNF_U, $y-EBNF_U/3, $x, $y, $x-EBNF_U, $y+EBNF_U/3), 3, $black);
 }
 
 
@@ -130,75 +129,75 @@ function render_node($node, $lefttoright) {
   global $white, $black, $blue, $red, $green, $silver;
   if ($node->nodeName=='identifier' || $node->nodeName=='terminal') {
     $text = html_entity_decode($node->getAttribute('value'));
-    $w = imagefontwidth(FONT)*(strlen($text)) + 4*UNIT;
-    $h = 2*UNIT;
+    $w = imagefontwidth(EBNF_FONT)*(strlen($text)) + 4*EBNF_U;
+    $h = 2*EBNF_U;
     $im = create_image($w, $h);
 
     if ($node->nodeName!='terminal') {
-        imagerectangle($im, UNIT, 0, $w-UNIT-1, $h-1, $black);
-      imagestring($im, FONT, 2*UNIT, ($h-imagefontheight(FONT))/2,   $text, $red);
+        imagerectangle($im, EBNF_U, 0, $w-EBNF_U-1, $h-1, $black);
+      imagestring($im, EBNF_FONT, 2*EBNF_U, ($h-imagefontheight(EBNF_FONT))/2,   $text, $red);
     } else {
       if ($text!="...")
-	      rr($im, UNIT, 0, $w-UNIT-1, $h-1, UNIT/2, $black);
-      imagestring($im, FONT, 2*UNIT, ($h-imagefontheight(FONT))/2,
+	      rr($im, EBNF_U, 0, $w-EBNF_U-1, $h-1, EBNF_U/2, $black);
+      imagestring($im, EBNF_FONT, 2*EBNF_U, ($h-imagefontheight(EBNF_FONT))/2,
         $text, $text!="..."?$blue:$black);
     }
-    imageline($im,0,UNIT, UNIT, UNIT, $black);
-    imageline($im,$w-UNIT,UNIT, $w+1, UNIT, $black);
+    imageline($im,0,EBNF_U, EBNF_U, EBNF_U, $black);
+    imageline($im,$w-EBNF_U,EBNF_U, $w+1, EBNF_U, $black);
     return $im;
   } else if ($node->nodeName=='option' || $node->nodeName=='loop') {
     if ($node->nodeName=='loop')
       $lefttoright = ! $lefttoright;
     $inner = render_node($node->firstChild, $lefttoright);
-    $w = imagesx($inner)+6*UNIT;
-    $h = imagesy($inner)+2*UNIT;
+    $w = imagesx($inner)+6*EBNF_U;
+    $h = imagesy($inner)+2*EBNF_U;
     $im = create_image($w, $h);
-    imagecopy($im, $inner, 3*UNIT, 2*UNIT, 0,0, imagesx($inner), imagesy($inner));
-    imageline($im,0,UNIT, $w, UNIT, $black);
-    arrow($im, $w/2+UNIT/2, UNIT, $node->nodeName=='loop'?!$lefttoright:$lefttoright);
-    arrow($im, 3*UNIT, 3*UNIT, $lefttoright);
-    arrow($im, $w-2*UNIT, 3*UNIT, $lefttoright);
-    imageline($im,UNIT,UNIT, UNIT, 3*UNIT, $black);
-    imageline($im,UNIT,3*UNIT, 2*UNIT, 3*UNIT, $black);
-    imageline($im,$w-UNIT,UNIT, $w-UNIT, 3*UNIT, $black);
-	imageline($im,$w-3*UNIT-1,3*UNIT, $w-UNIT, 3*UNIT, $black);
+    imagecopy($im, $inner, 3*EBNF_U, 2*EBNF_U, 0,0, imagesx($inner), imagesy($inner));
+    imageline($im,0,EBNF_U, $w, EBNF_U, $black);
+    arrow($im, $w/2+EBNF_U/2, EBNF_U, $node->nodeName=='loop'?!$lefttoright:$lefttoright);
+    arrow($im, 3*EBNF_U, 3*EBNF_U, $lefttoright);
+    arrow($im, $w-2*EBNF_U, 3*EBNF_U, $lefttoright);
+    imageline($im,EBNF_U,EBNF_U, EBNF_U, 3*EBNF_U, $black);
+    imageline($im,EBNF_U,3*EBNF_U, 2*EBNF_U, 3*EBNF_U, $black);
+    imageline($im,$w-EBNF_U,EBNF_U, $w-EBNF_U, 3*EBNF_U, $black);
+	imageline($im,$w-3*EBNF_U-1,3*EBNF_U, $w-EBNF_U, 3*EBNF_U, $black);
     return $im;
   } else if ($node->nodeName=='sequence') {
     $inner = render_childs($node, $lefttoright);
     if (!$lefttoright)
       $inner = array_reverse($inner);
-    $w = count($inner)*UNIT-UNIT; $h = 0;
+    $w = count($inner)*EBNF_U-EBNF_U; $h = 0;
     for ($i = 0; $i<count($inner); $i++) {
       $w += imagesx($inner[$i]);
       $h = max($h, imagesy($inner[$i]));
     } $im = create_image($w, $h);
     imagecopy($im, $inner[0], 0, 0, 0,0, imagesx($inner[0]), imagesy($inner[0]));
-    $x = imagesx($inner[0])+UNIT;
+    $x = imagesx($inner[0])+EBNF_U;
     for ($i = 1; $i<count($inner); $i++) {
-      imageline($im, $x-UNIT-1, UNIT, $x, UNIT, $black);
-      arrow($im, $x, UNIT, $lefttoright);
+      imageline($im, $x-EBNF_U-1, EBNF_U, $x, EBNF_U, $black);
+      arrow($im, $x, EBNF_U, $lefttoright);
       imagecopy($im, $inner[$i], $x, 0, 0,0, imagesx($inner[$i]), imagesy($inner[$i]));
-      $x += imagesx($inner[$i])+UNIT;
+      $x += imagesx($inner[$i])+EBNF_U;
     } return $im;
   } else if ($node->nodeName=='choise') {
     $inner = render_childs($node, $lefttoright);
-    $h = (count($inner)-1)*UNIT; $w = 0;
+    $h = (count($inner)-1)*EBNF_U; $w = 0;
     for ($i = 0; $i<count($inner); $i++) {
       $h += imagesy($inner[$i]);
       $w = max($w, imagesx($inner[$i]));
-    } $w += 6*UNIT; $im = create_image($w, $h); $y = 0;
-    imageline($im, 0, UNIT, UNIT, UNIT, $black);
-    imageline($im, $w-UNIT, UNIT, $w, UNIT, $black);
+    } $w += 6*EBNF_U; $im = create_image($w, $h); $y = 0;
+    imageline($im, 0, EBNF_U, EBNF_U, EBNF_U, $black);
+    imageline($im, $w-EBNF_U, EBNF_U, $w, EBNF_U, $black);
     for ($i = 0; $i<count($inner); $i++) {
-      imageline($im, UNIT, $y+UNIT, $w-UNIT, $y+UNIT, $black);
-      imagecopy($im, $inner[$i], 3*UNIT, $y, 0,0, imagesx($inner[$i]), imagesy($inner[$i]));
-      arrow($im, 3*UNIT, $y+UNIT, $lefttoright);
-      arrow($im, $w-2*UNIT, $y+UNIT, $lefttoright);
-      $top = $y + UNIT;
-      $y += imagesy($inner[$i])+UNIT;
+      imageline($im, EBNF_U, $y+EBNF_U, $w-EBNF_U, $y+EBNF_U, $black);
+      imagecopy($im, $inner[$i], 3*EBNF_U, $y, 0,0, imagesx($inner[$i]), imagesy($inner[$i]));
+      arrow($im, 3*EBNF_U, $y+EBNF_U, $lefttoright);
+      arrow($im, $w-2*EBNF_U, $y+EBNF_U, $lefttoright);
+      $top = $y + EBNF_U;
+      $y += imagesy($inner[$i])+EBNF_U;
     }
-    imageline($im, UNIT, UNIT, UNIT, $top, $black);
-    imageline($im, $w-UNIT, UNIT, $w-UNIT, $top, $black);
+    imageline($im, EBNF_U, EBNF_U, EBNF_U, $top, $black);
+    imageline($im, $w-EBNF_U, EBNF_U, $w-EBNF_U, $top, $black);
     return $im;
   } else if ($node->nodeName=='syntax') {
     $title = $node->getAttribute('title');
@@ -211,34 +210,34 @@ function render_node($node, $lefttoright) {
 	   $im = render_node($node->firstChild, $lefttoright);
 	   $images[] = $im;
        $node = $node->nextSibling;
-    } $wn  = 0; $wr = 0; $h = 5*UNIT;
+    } $wn  = 0; $wr = 0; $h = 5*EBNF_U;
     for ($i = 0; $i<count($images); $i++) {
-      $wn = max($wn, imagefontwidth(FONT)*strlen($names[$i]));
+      $wn = max($wn, imagefontwidth(EBNF_FONT)*strlen($names[$i]));
       $wr = max($wr, imagesx($images[$i]));
-	  $h += imagesy($images[$i])+2*UNIT;
+	  $h += imagesy($images[$i])+2*EBNF_U;
     }
-    if ($title=='') $h -= 2*UNIT;
-    if ($meta=='') $h -= 2*UNIT;
-    $w = max($wr+$wn+3*UNIT, imagefontwidth(1)*strlen($meta)+2*UNIT);
+    if ($title=='') $h -= 2*EBNF_U;
+    if ($meta=='') $h -= 2*EBNF_U;
+    $w = max($wr+$wn+3*EBNF_U, imagefontwidth(1)*strlen($meta)+2*EBNF_U);
     $im = create_image($w, $h);
-    $y = 2*UNIT;
+    $y = 2*EBNF_U;
     if ($title!='') {
-      imagestring($im, FONT, UNIT, (2*UNIT-imagefontheight(FONT))/2,
+      imagestring($im, EBNF_FONT, EBNF_U, (2*EBNF_U-imagefontheight(EBNF_FONT))/2,
       $title, $green);
-      imageline($im, 0, 2*UNIT, $w, 2*UNIT, $green);
-      $y += 2*UNIT;
+      imageline($im, 0, 2*EBNF_U, $w, 2*EBNF_U, $green);
+      $y += 2*EBNF_U;
     }
     for ($i = 0; $i<count($images); $i++) {
-      imagestring($im, FONT, UNIT, $y-UNIT+(2*UNIT-imagefontheight(FONT))/2, $names[$i], $red);
-      imagecopy($im, $images[$i], $wn+2*UNIT, $y, 0,0, imagesx($images[$i]) , imagesy($images[$i]));
-      imageline($im, UNIT, $y+UNIT, $wn+2*UNIT, $y+UNIT, $black);
-      imageline($im, $wn+2*UNIT+imagesx($images[$i])-1, $y+UNIT, $w-UNIT, $y+UNIT, $black);
-      imageline($im, $w-UNIT, $y+UNIT/2, $w-UNIT ,$y+1.5*UNIT, $black);
-      $y += 2*UNIT + imagesy($images[$i]);
+      imagestring($im, EBNF_FONT, EBNF_U, $y-EBNF_U+(2*EBNF_U-imagefontheight(EBNF_FONT))/2, $names[$i], $red);
+      imagecopy($im, $images[$i], $wn+2*EBNF_U, $y, 0,0, imagesx($images[$i]) , imagesy($images[$i]));
+      imageline($im, EBNF_U, $y+EBNF_U, $wn+2*EBNF_U, $y+EBNF_U, $black);
+      imageline($im, $wn+2*EBNF_U+imagesx($images[$i])-1, $y+EBNF_U, $w-EBNF_U, $y+EBNF_U, $black);
+      imageline($im, $w-EBNF_U, $y+EBNF_U/2, $w-EBNF_U ,$y+1.5*EBNF_U, $black);
+      $y += 2*EBNF_U + imagesy($images[$i]);
     }
-    imagestring($im, 1, UNIT, $h-2*UNIT+(2*UNIT-imagefontheight(1))/2,
+    imagestring($im, 1, EBNF_U, $h-2*EBNF_U+(2*EBNF_U-imagefontheight(1))/2,
       $meta, $silver);
-    rr($im, 0,0,$w-1, $h-1, UNIT/2, $green);
+    rr($im, 0,0,$w-1, $h-1, EBNF_U/2, $green);
     header('Content-Type: image/png');
     imagepng($im);
     return $im;
@@ -378,5 +377,3 @@ function ebnf_parse_factor(&$dom, &$tokens, &$i) {
   }
   throw new Exception("Factor expected: {$token['pos']}");
 }
-
-?>

@@ -6,12 +6,10 @@
  *
  * @license    GPL3
  * @author     Vincent Tscherter <vinent.tscherter@karmin.ch>
- * @version    0.1
+ * @version    0.2
  */
 
-if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../').'/');
-if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
-require_once(DOKU_PLUGIN.'syntax.php');
+use dokuwiki\Extension\SyntaxPlugin;
 
 class syntax_plugin_ebnf extends DokuWiki_Syntax_Plugin {
 
