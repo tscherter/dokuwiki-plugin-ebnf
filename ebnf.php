@@ -116,12 +116,16 @@ function create_image($w, $h) {
 
 function arrow($image, $x, $y, $lefttoright) {
   global $white, $black;
-  if (!$lefttoright)
-    imagefilledpolygon($image,
-      array($x, $y-EBNF_U/3, $x-EBNF_U, $y, $x, $y+EBNF_U/3), 3, $black);
-  else
-    imagefilledpolygon($image,
-      array($x-EBNF_U, $y-EBNF_U/3, $x, $y, $x-EBNF_U, $y+EBNF_U/3), 3, $black);
+  if (!$lefttoright) {
+      $points = array($x, $y - EBNF_U / 3, $x - EBNF_U, $y, $x, $y + EBNF_U / 3);
+  } else {
+      $points = array($x - EBNF_U, $y - EBNF_U / 3, $x, $y, $x - EBNF_U, $y + EBNF_U / 3);
+  }
+  if (PHP_VERSION_ID >= 80000 ) {
+      imagefilledpolygon($image, $points, $black);
+  } else {
+      imagefilledpolygon($image, $points, 3, $black);
+  }
 }
 
 
