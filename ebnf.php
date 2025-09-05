@@ -120,7 +120,7 @@ function create_image($w, $h) {
 
 function arrow($image, $x, $y, $lefttoright) {
   global $white, $black;
-  if (!$lefttoright) {
+    if (!$lefttoright) {
       $points = array($x, $y - EBNF_U / 3, $x - EBNF_U, $y, $x, $y + EBNF_U / 3);
   } else {
       $points = array($x - EBNF_U, $y - EBNF_U / 3, $x, $y, $x - EBNF_U, $y + EBNF_U / 3);
@@ -143,11 +143,11 @@ function render_node($node, $lefttoright) {
 
     if ($node->nodeName!='terminal') {
         imagerectangle($im, EBNF_U, 0, $w-EBNF_U-1, $h-1, $black);
-        imagestring($im, EBNF_FONT, 2*EBNF_U, intdiv($h-imagefontheight(EBNF_FONT), 2), $text, $red);
+      imagestring($im, EBNF_FONT, intval(2*EBNF_U), intval(($h-imagefontheight(EBNF_FONT))/2),   $text, $red);
     } else {
       if ($text!="...")
 	      rr($im, EBNF_U, 0, $w-EBNF_U-1, $h-1, EBNF_U/2, $black);
-      imagestring($im, EBNF_FONT, 2*EBNF_U, intdiv($h-imagefontheight(EBNF_FONT), 2),
+      imagestring($im, EBNF_FONT, intval(2*EBNF_U), intval(($h-imagefontheight(EBNF_FONT))/2),
         $text, $text!="..."?$blue:$black);
     }
     imageline($im,0,EBNF_U, EBNF_U, EBNF_U, $black);
@@ -230,13 +230,13 @@ function render_node($node, $lefttoright) {
     $im = create_image($w, $h);
     $y = 2*EBNF_U;
     if ($title!='') {
-      imagestring($im, EBNF_FONT, EBNF_U, intdiv(2*EBNF_U-imagefontheight(EBNF_FONT), 2),
+      imagestring($im, EBNF_FONT, EBNF_U, intval((2*EBNF_U-imagefontheight(EBNF_FONT))/2),
       $title, $green);
       imageline($im, 0, 2*EBNF_U, $w, 2*EBNF_U, $green);
       $y += 2*EBNF_U;
     }
     for ($i = 0; $i<count($images); $i++) {
-      imagestring($im, EBNF_FONT, EBNF_U, $y-EBNF_U+intdiv(2*EBNF_U-imagefontheight(EBNF_FONT), 2), $names[$i], $red);
+      imagestring($im, EBNF_FONT, EBNF_U, intval($y-EBNF_U+(2*EBNF_U-imagefontheight(EBNF_FONT))/2), $names[$i], $red);
       imagecopy($im, $images[$i], $wn+2*EBNF_U, $y, 0,0, imagesx($images[$i]) , imagesy($images[$i]));
       imageline($im, EBNF_U, $y+EBNF_U, $wn+2*EBNF_U, $y+EBNF_U, $black);
       imageline($im, $wn+2*EBNF_U+imagesx($images[$i])-1, $y+EBNF_U, $w-EBNF_U, $y+EBNF_U, $black);
