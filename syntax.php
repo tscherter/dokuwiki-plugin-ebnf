@@ -6,12 +6,12 @@
  *
  * @license    GPL3
  * @author     Vincent Tscherter <vinent.tscherter@karmin.ch>
- * @version    0.2
+ * @version    0.4
  */
 
 use dokuwiki\Extension\SyntaxPlugin;
 
-class syntax_plugin_ebnf extends DokuWiki_Syntax_Plugin {
+class syntax_plugin_ebnf extends SyntaxPlugin {
 
     function getType(){
         return 'substition';

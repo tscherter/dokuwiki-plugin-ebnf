@@ -13,13 +13,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-    Vincent Tscherter, tscherter@karmin.ch, Solothurn, 2009-01-18
+    Vincent Tscherter, tscherter@tscherter.net, Solothurn, 2009-01-18
 
     2009-01-18 version 0.1 first release
     2009-01-02 version 0.2
       - title und comment literal added
       - ";" als terminator-symbol added
     2023-09-28 version 0.3 prefixed all constants
+    2025-09-05 version 0.4 PHP 8 compatibility and other fixes
 */
 
 define('META', 'https://www.dokuwiki.org/plugin:ebnf');
