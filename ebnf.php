@@ -79,12 +79,15 @@ try {
   } else {
     render_node($dom->firstChild, true);
   }
-} catch (Exception $e) {
+} catch (EbnfException $e) {
     header('Content-Type: text/plain');
     $dom = new DOMDocument();
     $syntax = $dom->createElement("syntax");
     $syntax->setAttribute('title', 'EBNF - Syntax Error');
-    $syntax->setAttribute('meta', $e->getMessage());
+    $syntax->setAttribute('meta',
+        $e->getMessage()
+        . " - '" . substr($input, $e->getPos(), 30) . "...'"
+    );
     $dom->appendChild($syntax);
     render_node($dom->firstChild, true);
 }
@@ -116,12 +119,16 @@ function create_image($w, $h) {
 
 function arrow($image, $x, $y, $lefttoright) {
   global $white, $black;
-  if (!$lefttoright)
-    imagefilledpolygon($image,
-      array($x, $y-EBNF_U/3, $x-EBNF_U, $y, $x, $y+EBNF_U/3), $black);
-  else
-    imagefilledpolygon($image,
-      array($x-EBNF_U, $y-EBNF_U/3, $x, $y, $x-EBNF_U, $y+EBNF_U/3), $black);
+    if (!$lefttoright) {
+      $points = array($x, $y - EBNF_U / 3, $x - EBNF_U, $y, $x, $y + EBNF_U / 3);
+  } else {
+      $points = array($x - EBNF_U, $y - EBNF_U / 3, $x, $y, $x - EBNF_U, $y + EBNF_U / 3);
+  }
+  if (PHP_VERSION_ID >= 80000 ) {
+      imagefilledpolygon($image, $points, $black);
+  } else {
+      imagefilledpolygon($image, $points, 3, $black);
+  }
 }
 
 
@@ -266,7 +273,7 @@ function ebnf_scan(&$input) {
           'value' => $matches[0], 'pos' => $i);
       $i += strlen($matches[0]);
 	} else
-	  throw new Exception("Invalid token at position: $i");
+	  throw new EbnfException("Invalid token at position", $i);
   } return $tokens;
 }
 
@@ -287,13 +294,13 @@ function ebnf_parse_syntax(&$tokens) {
     $token = $tokens[$i++];
   }
   if (!ebnf_check_token($token, EBNF_OPERATOR_TOKEN, '{') )
-    throw new Exception("Syntax must start with '{': {$token['pos']}");
+    throw new EbnfException("Syntax must start with '{'", $token['pos']);
   $token = $tokens[$i];
   while ($i < count($tokens) && $token['type'] == EBNF_IDENTIFIER_TOKEN) {
     $syntax->appendChild(ebnf_parse_production($dom, $tokens, $i));
     if ($i<count($tokens)) $token = $tokens[$i];
   } $i++; if (!ebnf_check_token($token, EBNF_OPERATOR_TOKEN, '}'))
-    throw new Exception("Syntax must end with '}': ".$tokens[count($tokens)-1]['pos']);
+    throw new EbnfException("Syntax must end with '}'", $tokens[count($tokens)-1]['pos']);
   if ($i<count($tokens)) {
     $token = $tokens[$i];
     if ($token['type'] == EBNF_LITERAL_TOKEN) {
@@ -307,17 +314,17 @@ function ebnf_parse_syntax(&$tokens) {
 function ebnf_parse_production(&$dom, &$tokens, &$i) {
   $token = $tokens[$i++];
   if ($token['type']!=EBNF_IDENTIFIER_TOKEN)
-    throw new Exception("Production must start with an identifier'{': {$token['pos']}");
+    throw new EbnfException("Production must start with an identifier'{'", $token['pos']);
   $production = $dom->createElement("rule");
   $production->setAttribute('name', $token['value']);
   $token = $tokens[$i++];
   if (!ebnf_check_token($token, EBNF_OPERATOR_TOKEN, "="))
-    throw new Exception("Identifier must be followed by '=': {$token['pos']}");
+    throw new EbnfException("Identifier must be followed by '='", $token['pos']);
   $production->appendChild( ebnf_parse_expression($dom, $tokens, $i));
   $token = $tokens[$i++];
   if (!ebnf_check_token($token, EBNF_OPERATOR_TOKEN, '.')
     && !ebnf_check_token($token, EBNF_OPERATOR_TOKEN, ';'))
-    throw new Exception("Rule must end with '.' or ';' : {$token['pos']}");
+    throw new EbnfException("Rule must end with '.' or ';'", $token['pos']);
   return $production;
 }
 
@@ -358,22 +365,35 @@ function ebnf_parse_factor(&$dom, &$tokens, &$i) {
     $expression = ebnf_parse_expression($dom, $tokens, $i);
     $token = $tokens[$i++];
     if (!ebnf_check_token($token, EBNF_OPERATOR_TOKEN, ')'))
-      throw new Exception("Group must end with ')': {$token['pos']}");
+      throw new EbnfException("Group must end with ')'", $token['pos']);
     return $expression;
   } if (ebnf_check_token($token, EBNF_OPERATOR_TOKEN, '[')) {
     $option = $dom->createElement("option");
     $option->appendChild(ebnf_parse_expression($dom, $tokens, $i));
     $token = $tokens[$i++];
     if (!ebnf_check_token($token, EBNF_OPERATOR_TOKEN, ']'))
-      throw new Exception("Option must end with ']': {$token['pos']}");
+      throw new EbnfException("Option must end with ']'", $token['pos']);
     return $option;
   } if (ebnf_check_token($token, EBNF_OPERATOR_TOKEN, '{')) {
     $loop = $dom->createElement("loop");
     $loop->appendChild(ebnf_parse_expression($dom, $tokens, $i));
     $token = $tokens[$i++];
     if (!ebnf_check_token($token, EBNF_OPERATOR_TOKEN, '}'))
-      throw new Exception("Loop must end with '}': {$token['pos']}");
+      throw new EbnfException("Loop must end with '}'", $token['pos']);
     return $loop;
   }
-  throw new Exception("Factor expected: {$token['pos']}");
+  throw new EbnfException("Factor expected", $token['pos']);
+}
+
+class EbnfException extends Exception {
+    protected int $pos;
+
+    public function __construct($message, $pos) {
+        $this->pos = $pos;
+        parent::__construct($message . ": $pos");
+    }
+
+    public function getPos() {
+        return $this->pos;
+    }
 }
