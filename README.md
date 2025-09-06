@@ -1,7 +1,7 @@
 # EBNF Plugin for DokuWiki
 
 <p style="padding: 1ex; float: right; width: 200px">
-  <img src="https://github.com/tscherter/dokuwiki-plugin-ebnf/blob/main/image.png?raw=true" alt="Tooltip in action">
+  <img src="https://raw.githubusercontent.com/tscherter/dokuwiki-plugin-ebnf/refs/heads/master/image.png" alt="EBNF defined in itself">
 </p>
 
 EBNF Parser and Syntax Diagram Renderer. Parses grammars in extended Backus–Naur form (EBNF) and renders as syntax diagram
