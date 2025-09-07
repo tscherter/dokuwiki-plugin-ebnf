@@ -6,7 +6,7 @@
  *
  * @license    GPL3
  * @author     Vincent Tscherter <vinent.tscherter@karmin.ch>
- * @version    0.4
+ * @version    0.5
  */
 
 use dokuwiki\Extension\SyntaxPlugin;
@@ -44,13 +44,14 @@ class syntax_plugin_ebnf extends SyntaxPlugin {
     function render($mode, Doku_Renderer $renderer, $data) {
         if($mode == 'xhtml'){
             try {
-             $text = substr($data[0], 6, strlen($data[0])-13);
-             $text = preg_replace( "/[<>]+/", "", $text);
-             $text = preg_replace( "/[\\n\\r\\t ]+/", " ", $text);
-             $text = urlencode($text);
-             $renderer->doc .= "<img src='".DOKU_URL."lib/plugins/ebnf/ebnf.php?syntax=$text' alt='$text'/>";            // ptype = 'normal'
+             $ebnf = substr($data[0], 6, -7); // remove <ebnf> and </ebnf>
+             $ebnf = trim($ebnf); // remove spaces around
+             if (empty($ebnf)) return $ebnf='{}'; // if empty, use {}
+             $ebnf = preg_replace( "/\\s+/", " ", $ebnf); // replace multiple spaces by one space
+             $query = "syntax=".urlencode($ebnf); // urlencode the query
+             $renderer->doc .= "<img src='".DOKU_BASE."lib/plugins/ebnf/ebnf.php?$query' alt='$query'/>";          
             } catch (Exception $e) {
-              $renderer->doc .= "<pre>".htmlentities($text)."\n".$e."</pre>";
+              $renderer->doc .= "<pre>".htmlentities($ebnf)."\n".$e."</pre>";
             }
             return true;
         }
