@@ -21,6 +21,7 @@
       - ";" als terminator-symbol added
     2023-09-28 version 0.3 prefixed all constants
     2025-09-05 version 0.4 PHP 8 compatibility and other fixes
+    2025-09-06 version 0.5 code cleanup and optimization
 */
 
 define('META', 'https://www.dokuwiki.org/plugin:ebnf');

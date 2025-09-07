@@ -5,7 +5,7 @@
  * Syntax: <ebnf> ebnf syntax </ebnf>
  *
  * @license    GPL3
- * @author     Vincent Tscherter <vinent.tscherter@karmin.ch>
+ * @author     Vincent Tscherter <vincent@tscherter.net>
  * @version    0.5
  */
 
